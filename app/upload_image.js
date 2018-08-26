@@ -1,6 +1,7 @@
 const url = require('url');
 const uuid = require('uuid/v1');
 const Storage = require('@google-cloud/storage');
+const Readable = require('stream').Readable;
 
 module.exports = (searchUrl, buffer) => {
   return new Promise((resolve, reject) => {
@@ -20,15 +21,17 @@ module.exports = (searchUrl, buffer) => {
       },
     });
 
-    uploadStream
+    const readStream = new Readable();
+    readStream.push(buffer);
+    readStream.push(null);
+
+    readStream.pipe(uploadStream)
       .on('error', reject)
       .on('finish', (result) => {
         resolve({
           imagePath: `https://${uploadBucketName}.googleapis.com/${uploadFile}`,
           result,
         })
-      })
-      .write(buffer)
-      .end();
+      });
   });
 };
