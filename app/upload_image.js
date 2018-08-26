@@ -10,9 +10,10 @@ module.exports = (searchUrl, buffer) => {
 
     const uploadBucketName = process.env.UPLOAD_STORAGE_BUCKET;
     const uploadFileName = uuid();
+    const uploadFilePath = `${urlHost}/${uploadFileName}`;
 
     const bucket = Storage().bucket(uploadBucketName);
-    const uploadFile = bucket.file(`${urlHost}/${uploadFileName}`);
+    const uploadFile = bucket.file(uploadFilePath);
 
     const uploadStream = uploadFile.createWriteStream({
       predefinedAcl: 'publicRead',
@@ -29,7 +30,7 @@ module.exports = (searchUrl, buffer) => {
       .on('error', reject)
       .on('finish', (result) => {
         resolve({
-          imagePath: `https://${uploadBucketName}.googleapis.com/${uploadFile}`,
+          imagePath: `https://${uploadBucketName}.googleapis.com/${uploadFilePath}`,
           result,
         })
       });
