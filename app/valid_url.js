@@ -1,5 +1,5 @@
-import validator from 'validator';
-import url from 'url';
+const validator = require('validator');
+const url = require('url');
 
 module.exports = (checkUrl) => {
   const validOptions = {

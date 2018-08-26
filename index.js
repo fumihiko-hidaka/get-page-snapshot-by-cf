@@ -1,6 +1,6 @@
-import getPageInfo from 'app/get_puppeteer';
-import uploadImage from 'app/upload_image';
-import validUrl from 'app/valid_url';
+const getPageInfo = require('./app/get_puppeteer');
+const uploadImage = require('./app/upload_image');
+const validUrl = require('./app/valid_url');
 
 exports.getScreenShot = async (req, res) => {
   const searchUrl = req.body.text;

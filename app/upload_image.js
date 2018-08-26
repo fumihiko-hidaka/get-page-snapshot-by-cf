@@ -1,6 +1,6 @@
-import url from 'url';
-import uuid from 'uuid/v1';
-import Storage from '@google-cloud/storage';
+const url = require('url');
+const uuid = require('uuid/v1');
+const Storage = require('@google-cloud/storage');
 
 module.exports = (searchUrl, buffer) => {
   return new Promise((resolve, reject) => {
