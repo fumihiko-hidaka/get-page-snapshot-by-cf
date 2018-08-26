@@ -30,7 +30,7 @@ module.exports = (searchUrl, buffer) => {
       .on('error', reject)
       .on('finish', (result) => {
         resolve({
-          imagePath: `https://${uploadBucketName}.googleapis.com/${uploadFilePath}`,
+          imagePath: `https://${uploadBucketName}.storage.googleapis.com/${uploadFilePath}`,
           result,
         })
       });
