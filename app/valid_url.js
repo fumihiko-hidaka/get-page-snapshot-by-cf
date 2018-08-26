@@ -10,6 +10,7 @@ module.exports = (checkUrl) => {
 
   return (
     typeof checkUrl === 'string' &&
+    checkUrl.length > 0 &&
     validator.isURL(url, validOptions) &&
     validator.isFQDN(checkUrl)
   );
