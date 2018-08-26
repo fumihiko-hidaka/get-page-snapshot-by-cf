@@ -1,0 +1,18 @@
+{
+  "name": "puppeteer-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "engines": {
+    "node": "8.11.x"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^1.7.0",
+    "puppeteer": "^1.7.0",
+    "uuid": "^3.3.2",
+    "validator": "^10.7.0"
+  }
+}
