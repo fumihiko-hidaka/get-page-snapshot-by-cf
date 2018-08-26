@@ -19,10 +19,3 @@ steps:
     '--update-env-vars',
     'UPLOAD_STORAGE_BUCKET=${_UPLOAD_STORAGE_BUCKET}',
   ]
-- name: 'gcr.io/cloud-builders/gsutil'
-  args: [
-    'lifecycle',
-    'set',
-    'lifecycle.json',
-    'gs://${_UPLOAD_STORAGE_BUCKET}',
-  ]

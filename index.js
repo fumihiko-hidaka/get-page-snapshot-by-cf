@@ -17,7 +17,7 @@ exports.getScreenShot = async (req, res) => {
     if (puppeteerResult) {
       const uploadResult = await uploadImage(searchUrl, puppeteerResult.imageBuffer);
 
-      responseJson.attachments.append({
+      responseJson.attachments.push({
         author_name: puppeteerResult.title,
         author_link: searchUrl,
         image_url: uploadResult.imagePath,
@@ -26,7 +26,7 @@ exports.getScreenShot = async (req, res) => {
   }
 
   if (responseJson.attachments.length === 0) {
-    responseJson.attachments.append({
+    responseJson.attachments.push({
       title: `${searchUrl} を取得できませんでした……`
     });
   }
