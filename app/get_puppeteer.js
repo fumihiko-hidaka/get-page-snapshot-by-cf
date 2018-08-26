@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 
 module.exports = async (searchOption) => {
   let result = null;
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
 
   try {
     const page = await browser.newPage();
