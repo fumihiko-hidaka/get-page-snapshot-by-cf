@@ -12,8 +12,8 @@ exports.getScreenShot = async (req, res) => {
   if (validUrl(searchUrl)) {
     const puppeteerResult = await getPageInfo({
       url: searchUrl,
-      width: 960,
-      height: 540,
+      width: 1000,
+      height: 1000,
     });
 
     if (puppeteerResult) {
