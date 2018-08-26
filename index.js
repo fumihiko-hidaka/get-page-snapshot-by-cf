@@ -12,6 +12,8 @@ exports.getScreenShot = async (req, res) => {
   if (validUrl(searchUrl)) {
     const puppeteerResult = await getPageInfo({
       url: searchUrl,
+      width: 960,
+      height: 540,
     });
 
     if (puppeteerResult) {
@@ -34,3 +36,9 @@ exports.getScreenShot = async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(responseJson));
 };
+
+exports.getScreenShot({
+  body: {
+    text: 'https://www.google.com/',
+  }
+});
