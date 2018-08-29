@@ -4,7 +4,7 @@ const validUrl = require('./app/valid_url');
 
 exports.getScreenShot = async (req, res) => {
   if (req.body.token !== process.env.SLACK_SLASH_COMMAND_TOKEN) {
-    res.status(401).end();
+    res.status(401).send('token not defined!');
     return;
   }
 
