@@ -18,11 +18,12 @@ exports.getScreenShot = async (req, res) => {
 
   if (!validResult.message) {
 
+    const bufferData = JSON.stringify({ data: req.body });
     const pubSubClient = new PubSub();
 
     await pubSubClient.topic(process.env.DELAY_RESPONSE_TOPIC)
       .publisher()
-      .publish(Buffer.from({ data: req.body }));
+      .publish(Buffer.from(bufferData));
 
     res.setHeader('Content-Type', 'application/json');
     res.status(200).send({
