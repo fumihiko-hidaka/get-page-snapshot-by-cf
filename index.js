@@ -47,12 +47,11 @@ exports.getScreenShot = async (req, res) => {
 exports.responseResult = async (event) => {
   const pubSubMessage = Buffer.from(event.data, 'base64').toString();
   const pubSubData = JSON.parse(pubSubMessage) || {};
-  const pubSubBody = pubSubData.data || {};
 
   console.log(pubSubMessage);
 
-  const requestBody = pubSubBody.body;
-  const searchUrl = pubSubBody.text;
+  const requestBody = pubSubData.data;
+  const searchUrl = requestBody.text;
   const responseUrl = requestBody.response_url;
 
   const responseJson = {
