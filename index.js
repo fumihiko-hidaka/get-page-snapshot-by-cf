@@ -1,6 +1,7 @@
 const request = require('request');
 const getPageInfo = require('./app/get_puppeteer');
 const uploadImage = require('./app/upload_image');
+const PubSub = require('@google-cloud/pubsub');
 const validUrl = require('./app/valid_url');
 
 exports.getScreenShot = async (req, res) => {
@@ -11,37 +12,66 @@ exports.getScreenShot = async (req, res) => {
 
   console.log(req.body);
 
-  // puppeteerのOKのレスポンスを返す
-  res.setHeader('Content-Type', 'application/json');
-  res.status(200).end();
-
   const searchUrl = req.body.text;
+
+  const validResult = validUrl(searchUrl);
+
+  if (!validResult.message) {
+
+    const pubSubClient = new PubSub();
+
+    await pubSubClient.topic(process.env.SNAPSHOT_TOPIC)
+      .publisher()
+      .publish(Buffer.from({ data: req.body }));
+
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).send({
+      text: searchUrl,
+      attachments: [{
+        title: `猫の目で覗き始めます🐱`,
+      }],
+    });
+
+  } else {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).send({
+      text: searchUrl,
+      attachments: [{
+        title: validResult.message
+      }],
+    });
+  }
+};
+
+exports.responseResult = async (event) => {
+  const pubSubMessage = Buffer.from(event.data, 'base64').toString();
+  const pubSubData = JSON.parse(pubSubMessage) || {};
+
+  console.log(pubSubMessage);
+
+  const requestBody = pubSubData.body;
+  const searchUrl = requestBody.text;
+  const responseUrl = requestBody.response_url;
 
   const responseJson = {
     text: searchUrl,
     attachments: [],
   };
 
-  if (validUrl(searchUrl)) {
-    console.log("getPageInfo start");
-    const puppeteerResult = await getPageInfo({
-      url: searchUrl,
-      width: 500,
-      height: 500,
+  const puppeteerResult = await getPageInfo({
+    url: searchUrl,
+    width: 500,
+    height: 500,
+  });
+
+  if (puppeteerResult) {
+    const uploadResult = await uploadImage(searchUrl, puppeteerResult.imageBuffer);
+
+    responseJson.attachments.push({
+      author_name: puppeteerResult.title,
+      author_link: searchUrl,
+      image_url: uploadResult.imagePath,
     });
-    console.log("getPageInfo end");
-
-    if (puppeteerResult) {
-      console.log("uploadImage start");
-      const uploadResult = await uploadImage(searchUrl, puppeteerResult.imageBuffer);
-
-      responseJson.attachments.push({
-        author_name: puppeteerResult.title,
-        author_link: searchUrl,
-        image_url: uploadResult.imagePath,
-      });
-      console.log("uploadImage end");
-    }
   }
 
   if (responseJson.attachments.length === 0) {
@@ -50,15 +80,20 @@ exports.getScreenShot = async (req, res) => {
     });
   }
 
-  request({
-    url: req.body.response_url,
-    method: 'POST',
-    json: responseJson,
-  }, (err, httpResponse) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(httpResponse);
+  await new Promise((resolve, reject) => {
+    request({
+      url: responseUrl,
+      method: 'POST',
+      json: responseJson,
+    }, (err, httpResponse, body) => {
+      const setObj = { err, httpResponse, body };
+
+      if (err) {
+        reject(setObj);
+        return;
+      }
+
+      resolve(setObj);
+    });
   });
 };

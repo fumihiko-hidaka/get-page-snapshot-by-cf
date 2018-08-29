@@ -4,7 +4,25 @@ steps:
     'beta',
     'functions',
     'deploy',
-    '${_TARGET_CLOUD_FUNCTIONS}',
+    '${_TARGET_CLOUD_FUNCTIONS_HTTP}',
+    '--source',
+    'https://source.developers.google.com/projects/$PROJECT_ID/repos/$REPO_NAME/moveable-aliases/$BRANCH_NAME',
+    '--runtime',
+    'nodejs8',
+    '--memory',
+    '128MB',
+    '--region',
+    'asia-northeast1',
+    '--entry-point',
+    'getScreenShot',
+    '--trigger-http',
+  ]
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: [
+    'beta',
+    'functions',
+    'deploy',
+    '${_TARGET_CLOUD_FUNCTIONS_DELAY_RESPONSE}',
     '--source',
     'https://source.developers.google.com/projects/$PROJECT_ID/repos/$REPO_NAME/moveable-aliases/$BRANCH_NAME',
     '--runtime',
@@ -14,6 +32,9 @@ steps:
     '--region',
     'asia-northeast1',
     '--entry-point',
-    'getScreenShot',
-    '--trigger-http'
+    'responseResult',
+    '--trigger-resource',
+    '${_DELAY_RESPONSE_TOPIC}',
+    '--trigger-event',
+    'google.pubsub.topic.publish',
   ]

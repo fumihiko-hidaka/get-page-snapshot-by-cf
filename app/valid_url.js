@@ -8,13 +8,29 @@ module.exports = (checkUrl) => {
     require_host: true,
   };
 
-  if (typeof checkUrl === 'string' && validator.isURL(checkUrl, validOptions)) {
-    const urlParts = url.parse(checkUrl);
+  const result = {
+    message: '',
+  };
 
-    return (
-      validator.isFQDN(urlParts.host)
-    )
+  if (typeof checkUrl !== 'string' || checkUrl.length === 0) {
+    result.message = 'URLが入力されていません';
+    return result;
   }
 
-  return false;
+  if (checkUrl.indexOf('http') !== 0) {
+    checkUrl = `http://${checkUrl}`;
+  }
+
+  if (!validator.isURL(checkUrl, validOptions)) {
+    result.message = '入力されているURLの形式が正しくありません。';
+    return result;
+  }
+
+  const urlParts = url.parse(checkUrl);
+  if (!validator.isFQDN(urlParts.host)) {
+    result.message = '入力されているURLの形式が正しくありません。';
+    return result;
+  }
+
+  return result;
 };
