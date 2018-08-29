@@ -28,6 +28,7 @@ exports.getScreenShot = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.status(200).send({
       text: searchUrl,
+      response_type: 'in_channel',
       attachments: [{
         title: `猫の目で覗き始めます🐱`,
       }],
@@ -37,6 +38,7 @@ exports.getScreenShot = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.status(200).send({
       text: searchUrl,
+      response_type: 'in_channel',
       attachments: [{
         title: validResult.message
       }],
@@ -56,6 +58,7 @@ exports.responseResult = async (event) => {
 
   const responseJson = {
     text: searchUrl,
+    response_type: 'in_channel',
     attachments: [],
   };
 
