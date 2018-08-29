@@ -19,6 +19,9 @@ steps:
     '--update-env-vars',
     'DELAY_RESPONSE_TOPIC=${_DELAY_RESPONSE_TOPIC}',
   ]
+  waitFor: [
+    '-',
+  ]
 - name: 'gcr.io/cloud-builders/gcloud'
   args: [
     'beta',
@@ -39,4 +42,7 @@ steps:
     '${_DELAY_RESPONSE_TOPIC}',
     '--trigger-event',
     'google.pubsub.topic.publish',
+  ]
+  waitFor: [
+    '-',
   ]
