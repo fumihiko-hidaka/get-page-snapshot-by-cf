@@ -16,6 +16,8 @@ steps:
     '--entry-point',
     'getScreenShot',
     '--trigger-http',
+    '--update-env-vars',
+    'DELAY_RESPONSE_TOPIC=${_DELAY_RESPONSE_TOPIC}',
   ]
 - name: 'gcr.io/cloud-builders/gcloud'
   args: [

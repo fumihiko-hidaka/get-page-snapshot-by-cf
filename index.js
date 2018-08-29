@@ -20,7 +20,7 @@ exports.getScreenShot = async (req, res) => {
 
     const pubSubClient = new PubSub();
 
-    await pubSubClient.topic(process.env.SNAPSHOT_TOPIC)
+    await pubSubClient.topic(process.env.DELAY_RESPONSE_TOPIC)
       .publisher()
       .publish(Buffer.from({ data: req.body }));
 
