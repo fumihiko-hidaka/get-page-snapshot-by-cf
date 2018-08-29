@@ -23,13 +23,16 @@ exports.getScreenShot = async (req, res) => {
   };
 
   if (validUrl(searchUrl)) {
+    console.log("getPageInfo start");
     const puppeteerResult = await getPageInfo({
       url: searchUrl,
       width: 500,
       height: 500,
     });
+    console.log("getPageInfo end");
 
     if (puppeteerResult) {
+      console.log("uploadImage start");
       const uploadResult = await uploadImage(searchUrl, puppeteerResult.imageBuffer);
 
       responseJson.attachments.push({
@@ -37,6 +40,7 @@ exports.getScreenShot = async (req, res) => {
         author_link: searchUrl,
         image_url: uploadResult.imagePath,
       });
+      console.log("uploadImage end");
     }
   }
 
