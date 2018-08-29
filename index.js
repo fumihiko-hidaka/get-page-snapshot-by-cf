@@ -1,17 +1,22 @@
+const request = require('request');
 const getPageInfo = require('./app/get_puppeteer');
 const uploadImage = require('./app/upload_image');
 const validUrl = require('./app/valid_url');
 
 exports.getScreenShot = async (req, res) => {
   if (req.body.token !== process.env.SLACK_SLASH_COMMAND_TOKEN) {
-    res.status(401).send('token not defined!');
+    res.status(401).end();
     return;
   }
 
-
   console.log(req.body);
 
+  // puppeteerのOKのレスポンスを返す
+  res.setHeader('Content-Type', 'application/json');
+  res.status(200).end();
+
   const searchUrl = req.body.text;
+
   const responseJson = {
     text: searchUrl,
     attachments: [],
@@ -41,6 +46,15 @@ exports.getScreenShot = async (req, res) => {
     });
   }
 
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(responseJson));
+  request({
+    url: req.body.response_url,
+    method: 'POST',
+    json: responseJson,
+  }, (err, httpResponse) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(httpResponse);
+  });
 };
