@@ -15,7 +15,7 @@ module.exports = async (searchOption) => {
     await page.goto(searchOption.url);
 
     // 画面描画が完了するのを待つ
-    await new Promise(resolve => setTimeout(() => resolve(), 3000));
+    await new Promise(resolve => setTimeout(() => resolve(), 500));
 
     const title = await page.title();
 

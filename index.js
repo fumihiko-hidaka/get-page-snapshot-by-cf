@@ -3,6 +3,14 @@ const uploadImage = require('./app/upload_image');
 const validUrl = require('./app/valid_url');
 
 exports.getScreenShot = async (req, res) => {
+  if (req.body.token !== process.env.SLACK_SLASH_COMMAND_TOKEN) {
+    res.status(401).end();
+    return;
+  }
+
+
+  console.log(req.body);
+
   const searchUrl = req.body.text;
   const responseJson = {
     text: searchUrl,
@@ -12,8 +20,8 @@ exports.getScreenShot = async (req, res) => {
   if (validUrl(searchUrl)) {
     const puppeteerResult = await getPageInfo({
       url: searchUrl,
-      width: 1000,
-      height: 1000,
+      width: 500,
+      height: 500,
     });
 
     if (puppeteerResult) {

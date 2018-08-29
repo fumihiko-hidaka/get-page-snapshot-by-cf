@@ -15,7 +15,5 @@ steps:
     'asia-northeast1',
     '--entry-point',
     'getScreenShot',
-    '--trigger-http',
-    '--update-env-vars',
-    'UPLOAD_STORAGE_BUCKET=${_UPLOAD_STORAGE_BUCKET}',
+    '--trigger-http'
   ]
